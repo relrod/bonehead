@@ -3,6 +3,8 @@ from twisted.words.protocols import irc
 from twisted.internet import reactor, protocol
 from twisted.python import log
 
+from commandhandle import CommandHandler
+
 import time, sys
 
 class MessageLogger:
@@ -20,11 +22,11 @@ class MessageLogger:
 class BoneBot(irc.IRCClient):
 
    nickname = "bone"
-
    def connectionMade(self):
       irc.IRCClient.connectionMade(self)
       self.logger = MessageLogger(open(self.factory.filename, "a"))
       self.logger.log("[connected]")
+      self.cmdhandle = CommandHandler(self)
 
    def connectionLost(self, reason):
       irc.IRCClient.connectionLost(self, reason)
@@ -42,9 +44,9 @@ class BoneBot(irc.IRCClient):
    def privmsg(self, user, channel, msg):
       user = user.split("!")[0]
       self.logger.log("<%s> %s" % (user, msg))
-
       if msg.startswith(">"):
-         self.msg(channel, "woof.")
+         from commandhandle import CommandHandler
+         self.cmdhandle.handlecmd(channel, msg[1:])
 
    def action(self, user, channel, msg):
       user = user.split('!', 1)[0]
