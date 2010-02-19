@@ -59,7 +59,6 @@ def morsetolatin(morse):
             translatedletters += " "
         else:
             translatedletters += codes[letter]
-    return translatedletters
 
 def latintomorse(latin)
    letters = re.findall(".", latin)
