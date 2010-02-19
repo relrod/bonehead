@@ -1,4 +1,4 @@
-from Morse import Morse
+import Morse
 class CommandHandler:
    def __init__(self, bot):
       self.bot = bot
