@@ -1,0 +1,7 @@
+syntax: glob
+*.swp
+*.swo
+*.pyo
+*.pyc
+*.log
+settings.ini
