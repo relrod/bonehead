@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import ConfigParser
 from twisted.words.protocols import irc
 from twisted.internet import reactor, protocol
 from twisted.python import log
@@ -21,7 +22,7 @@ class MessageLogger:
 
 class BoneBot(irc.IRCClient):
 
-   nickname = "bone"
+   nickname = "bonehead"
    def connectionMade(self):
       irc.IRCClient.connectionMade(self)
       self.logger = MessageLogger(open(self.factory.filename, "a"))
@@ -73,9 +74,13 @@ class BoneBotFactory(protocol.ClientFactory):
 if __name__ == "__main__":
    
    log.startLogging(sys.stdout)
+   parser = ConfigParser.ConfigParser()
+   parser.read("settings.ini")
+   nick = parser.get('bone-global', 'nickname')
+   for section in parser.sections():
+      if section != 'bone-global':
+         # Each section is a network now.
+         f = BoneBotFactory( parser.get(section, 'channels'), parser.get(section, 'logname') )
+         reactor.connectTCP( parser.get(section, 'server'), int(parser.get(section, 'port')), f )
+         reactor.run()
 
-   f = BoneBotFactory(sys.argv[1], sys.argv[2])
-   
-   reactor.connectTCP("irc.eighthbit.net", 6667, f)
-   
-   reactor.run()
