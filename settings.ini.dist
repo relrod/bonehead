@@ -1,0 +1,8 @@
+[bone-global]
+nickname = bonehead
+
+[eighthbit]
+server = irc.eighthbit.net
+port = 6667
+channels = #bots
+logname = eighthbit-bots.log
